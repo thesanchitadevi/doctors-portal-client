@@ -25,7 +25,6 @@ const AvailableAppointments = ({ selectedDate }) => {
                         <AppointmentOption
                             key={option._id}
                             option={option}
-                            
                             setTreatment={setTreatment}
                             setShowModal={setShowModal}
                         ></AppointmentOption>
@@ -36,6 +35,7 @@ const AvailableAppointments = ({ selectedDate }) => {
             {showModal && <BookingModal
                 selectedDate={selectedDate}
                 treatment={treatment}
+                setTreatment={setTreatment}
                 setOpenModal={setShowModal}
             />}
         </section>

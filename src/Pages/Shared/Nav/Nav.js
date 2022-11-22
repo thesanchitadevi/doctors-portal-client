@@ -1,8 +1,36 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { authContext } from "../../../Context/AuthProvider/AuthProvider";
 
 export default function Nav() {
     const [navbar, setNavbar] = useState(false);
+    const { user, providerSignOut } = useContext(authContext);
+
+    const handleLogout = event => {
+        providerSignOut()
+            .then(() => { })
+            .catch(error => {
+                console.error(error);
+            })
+    }
+
+    const menu = <>
+        {user?.uid ?
+            <button onClick={handleLogout}
+                className="inline-block space-x-5 w-full px-10 text-center text-blue-900 "
+            >
+                Logout
+            </button>
+            :
+            <Link
+                to="/login"
+                className="inline-block space-x-5 w-full px-10 text-center text-blue-900 "
+            >
+                Login
+            </Link>
+        }
+
+    </>
 
     return (
         <nav className="w-full bg-white shadow">
@@ -65,40 +93,21 @@ export default function Nav() {
                             <li className="text-blue-900 hover:text-blue-600">
                                 <Link to="/appointment">Appointment</Link>
                             </li>
-                            <li className="text-blue-900 hover:text-blue-600">
-                                <Link to="/blog">Blog</Link>
-                            </li>
+                            {
+                                user?.uid &&
+                                <li className="text-blue-900 hover:text-blue-600">
+                                <Link to="/dashboard">Dashboard</Link>
+                                </li>
+                            }
                         </ul>
 
                         <div className="mt-3 space-y-2 lg:hidden md:inline-block">
-                            <Link
-                                to="/login"
-                                className="inline-block space-x-5 w-full px-10 text-center text-blue-900 "
-                            >
-                                Sign in
-                            </Link>
-                            <Link
-                                to="/register"
-                                className="inline-block space-x-5 w-full px-10 text-center text-gray-800 "
-                            >
-                                Sign up
-                            </Link>
+                            {menu}
                         </div>
                     </div>
                 </div>
                 <div className="hidden space-x-2 md:inline-block">
-                    <Link
-                        to="/login"
-                        className="space-x-5 px-3 text-blue-800"
-                    >
-                        Sign in
-                    </Link>
-                    <Link
-                        to="/register"
-                        className="space-x-5 px-3 text-blue-800"
-                    >
-                        Sign up
-                    </Link>
+                    {menu}
                 </div>
             </div>
         </nav>

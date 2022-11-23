@@ -1,9 +1,13 @@
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
+import { authContext } from '../../../Context/AuthProvider/AuthProvider';
 
 const BookingModal = ({ treatment, setOpenModal, selectedDate, setTreatment }) => {
-    const { name, slots } = treatment;
+    const { name: treatmentName, slots } = treatment;
     const date = format(selectedDate, 'PP');
+
+    const { user } = useContext(authContext);
 
 
     const handleBooking = (event) => {
@@ -11,15 +15,35 @@ const BookingModal = ({ treatment, setOpenModal, selectedDate, setTreatment }) =
         const form = event.target;
         const slot = form.slot.value;
         const patientName = form.patientName.value;
+        const email = form.email.value;
 
         const booking = {
             appointmentDate: date,
-            treatment: name,
+            treatment: treatmentName,
             patient: patientName,
+            email,
             slot,
-            
         }
-        setTreatment(null);
+
+        fetch('http://localhost:5000/bookings', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.acknowledged) {
+                    setTreatment(null);
+                    alert('Booking confirmed');
+                }
+                else {
+                    toast.error(data.message);
+                }
+                
+            })
         console.log(booking);
     };
 
@@ -37,7 +61,7 @@ const BookingModal = ({ treatment, setOpenModal, selectedDate, setTreatment }) =
                             <div className="my-2 text-center  sm:text-left">
                                 <div className='flex justify-between'>
                                     <h4 className="text-xl font-medium text-gray-800">
-                                        {name}
+                                        {treatmentName}
                                     </h4>
                                     <input onClick={() => setOpenModal(false)} type="button" value="x" className='font-semibold text-2xl border px-1' />
                                 </div>
@@ -48,7 +72,7 @@ const BookingModal = ({ treatment, setOpenModal, selectedDate, setTreatment }) =
                                     </label>
                                     <input name='date' className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Date" value={date} disabled /> <br />
 
-                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-state">
                                         Slot
                                     </label>
                                     <div className="relative">
@@ -69,14 +93,19 @@ const BookingModal = ({ treatment, setOpenModal, selectedDate, setTreatment }) =
                                     </div>
 
                                     <br />
-                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
                                         Name
                                     </label>
-                                    <input name='patientName' className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Name" />
+                                    <input name='patientName' className="appearance-none block w-full bg-gray-200 text-gray-700 border border-cyan-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Name" defaultValue={user?.displayName} disabled />
+                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+                                        Email
+                                    </label>
+                                    <input name='email' className="appearance-none block w-full bg-gray-200 text-gray-700 border border-cyan-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Email" defaultValue={user?.email} disabled />
+
                                     <input className='btn btn-accent w-full' type="submit" value="Submit" />
                                 </form>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

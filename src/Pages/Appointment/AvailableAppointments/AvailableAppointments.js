@@ -2,17 +2,41 @@ import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import AppointmentOption from './AppointmentOption';
 import BookingModal from '../BookingModal/BookingModal';
+import { useQuery } from '@tanstack/react-query';
 
 const AvailableAppointments = ({ selectedDate }) => {
-    const [appointmentOptions, setAppointmentOptions] = useState([]);
-    const [treatment, setTreatment] = useState({});
+    // const [appointmentOptions, setAppointmentOptions] = useState([]);
+    const [treatment, setTreatment] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        fetch('appointmentOptions.json')
-            .then(res => res.json())
-            .then(data => setAppointmentOptions(data))
-    }, [])
+    const date = format(selectedDate, 'PP');
+
+    const { data: appointmentOptions=[] /* isLoading */ } = useQuery({ //use empty array or isLoading
+        queryKey: ['appointmentOptions',date],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/appointmentOptions?date=${date}`)
+            const data = await res.json();
+            return data;
+        }
+    })
+
+    /*  
+    queryFn: () => fetch('http://localhost:5000/appointmentOptions')
+    .then(res => res.json()) 
+    */
+    /* 
+    queryFn: async() => {
+        const res = await fetch('http://localhost:5000/appointmentOptions')
+        const data = await res.json();
+        return data;
+        }
+    */
+
+    // useEffect(() => {
+    //     fetch('http://localhost:5000/appointmentOptions')
+    //         .then(res => res.json())
+    //         .then(data => setAppointmentOptions(data))
+    // }, [])
 
     return (
         <section className='my-10'>
@@ -28,11 +52,11 @@ const AvailableAppointments = ({ selectedDate }) => {
                             setTreatment={setTreatment}
                             setShowModal={setShowModal}
                         ></AppointmentOption>
-                            
+
                     )
                 }
             </div>
-            {showModal && <BookingModal
+            {showModal && treatment && <BookingModal
                 selectedDate={selectedDate}
                 treatment={treatment}
                 setTreatment={setTreatment}

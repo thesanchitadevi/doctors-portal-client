@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import PrimaryButton from '../../../Components/PrimaryButton/PrimaryButton';
-import BookingModal from '../BookingModal/BookingModal';
+import React from 'react';
 
-const AppointmentOption = ({ option, setTreatment, treatment, setShowModal }) => {
+const AppointmentOption = ({ option, setTreatment,  setShowModal }) => {
     const { name, slots } = option;
 
 

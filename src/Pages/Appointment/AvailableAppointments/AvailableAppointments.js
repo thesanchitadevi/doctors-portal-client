@@ -12,14 +12,14 @@ const AvailableAppointments = ({ selectedDate }) => {
 
     const date = format(selectedDate, 'PP');
 
-    const { data: appointmentOptions = [], refetch, isLoading } = useQuery({ //use empty array or isLoading
+    const { data: appointmentOptions = [], refetch, isLoading } = useQuery({
         queryKey: ['appointmentOptions', date],
         queryFn: async () => {
             const res = await fetch(`http://localhost:5000/v2/appointmentOptions?date=${date}`);
             const data = await res.json();
             return data
         }
-    })
+    });
 
     if (isLoading) {
         return <Loading></Loading>

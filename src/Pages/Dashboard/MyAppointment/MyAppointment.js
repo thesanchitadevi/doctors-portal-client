@@ -1,6 +1,21 @@
-import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React, { useContext } from 'react';
+import { authContext } from '../../../Context/AuthProvider/AuthProvider';
 
 const MyAppointment = () => {
+    const { user } = useContext(authContext);
+
+    const url = `http://localhost:5000/bookings?email=${user?.email}`
+
+    const { data: bookings = [], refetch, isLoading } = useQuery({ //use empty array or isLoading
+        queryKey: ['bookings', user?.email],
+        queryFn: async () => {
+            const res = await fetch(url);
+            const data = await res.json();
+            return data
+        }
+    })
+
     return (
         <div className='flex flex-col  items-center w-full'>
             <div>
@@ -35,7 +50,21 @@ const MyAppointment = () => {
                                 class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
                             >
                                 <div class="flex items-center gap-2">
-                                    Amount
+                                    Treatment
+                                </div>
+                            </th>
+                            <th
+                                class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                            >
+                                <div class="flex items-center gap-2">
+                                    Date
+                                </div>
+                            </th>
+                            <th
+                                class="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900"
+                            >
+                                <div class="flex items-center gap-2">
+                                    Time
                                 </div>
                             </th>
                             <th
@@ -47,64 +76,31 @@ const MyAppointment = () => {
                     </thead>
 
                     <tbody class="divide-y divide-gray-200">
-                        <tr>
-                            
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                #00001
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                John Frusciante
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">john@rhcp.com</td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">$783.23</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <strong
-                                    class="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700"
-                                >
-                                    Cancelled
-                                </strong>
-                            </td>
-                        </tr>
+                        {
+                            bookings.map((booking,i) =>
+                                <tr key={booking._id}>
+                                    <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                       {i+1}
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                        {booking.patient}
+                                    </td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{booking.email}</td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{booking.treatment}</td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{booking.appointmentDate}</td>
+                                    <td class="whitespace-nowrap px-4 py-2 text-gray-700">{booking.slot}</td>
+                                    <td class="whitespace-nowrap px-4 py-2">
+                                        <strong
+                                            class="rounded bg-red-100 px-3 py-1.5 text-xs font-medium text-red-700"
+                                        >
+                                            Cancelled
+                                        </strong>
+                                    </td>
+                                </tr>
+                            )
+                        }
 
-                        <tr>
-                            
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                #00002
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                George Harrison
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                george@beatles.com
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">$128.99</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <strong
-                                    class="rounded bg-green-100 px-3 py-1.5 text-xs font-medium text-green-700"
-                                >
-                                    Paid
-                                </strong>
-                            </td>
-                        </tr>
-
-                        <tr>
-                           
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                #00003
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">Dave Gilmour</td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                                dave@pinkfloyd.com
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">$459.43</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <strong
-                                    class="rounded bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-700"
-                                >
-                                    Partially Refunded
-                                </strong>
-                            </td>
-                        </tr>
+                    
                     </tbody>
                 </table>
             </div>

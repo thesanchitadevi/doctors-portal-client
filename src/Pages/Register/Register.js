@@ -61,7 +61,7 @@ const Register = () => {
         <div className="w-full mx-auto max-w-md p-4 rounded-md shadow sm:p-8  text-gray-700">
             <h2 className="mb-3 text-3xl font-semibold text-center">Register your account</h2>
             <p className="text-sm text-center text-gray-400">Already have account?
-                <Link to="/register" className="focus:underline hover:underline"> Login here</Link>
+                <Link to="/login" className="focus:underline hover:underline"> Login here</Link>
             </p>
             <div className="my-6 space-y-4">
                 <button ariaLabel="Login with Google" type="button" className="flex items-center justify-center w-full p-4 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 border-gray-400 focus:ring-cyan-400">

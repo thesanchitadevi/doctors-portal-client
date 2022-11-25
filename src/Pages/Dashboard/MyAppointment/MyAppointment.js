@@ -81,7 +81,8 @@ const MyAppointment = () => {
 
                     <tbody class="divide-y divide-gray-200">
                         {
-                            bookings.map((booking,i) =>
+                            bookings.length &&
+                            bookings?.map((booking,i) =>
                                 <tr key={booking._id}>
                                     <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                                        {i+1}

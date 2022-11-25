@@ -86,7 +86,7 @@ const Register = () => {
             <form onSubmit={handleSubmit(handleRegister)} >
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm">Name</label>
+                        <label htmlFor="name" className="block text-sm">Name</label>
                         <input type="text" name="name" id="name" placeholder="name"
                             {...register("name",
                                 {

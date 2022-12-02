@@ -66,7 +66,7 @@ const ManageDoctors = () => {
                     </thead>
                     <tbody className="block md:table-row-group">
                         {
-                            doctors &&
+                            doctors.length &&
                             doctors?.map((doctor, i) =>
                                 <>
                                     <tr className=" border border-grey-500 md:border-none block md:table-row">

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AppointmentOption = ({ option, setTreatment,  setShowModal }) => {
-    const { name, slots } = option;
+    const { name, slots,price } = option;
 
 
     return (
@@ -10,6 +10,7 @@ const AppointmentOption = ({ option, setTreatment,  setShowModal }) => {
             <h2 className="text-2xl font-semibold leading-tight tracking-wide">{name}</h2>
             <p className="flex-1 text-center text-gray-600">{slots.length > 0 ? slots[0] : 'All slots booked'}</p>
             <p className="flex-1 text-center text-gray-600">{slots.length} {slots.length > 1 ? 'spaces' : 'space'} Available</p>
+            <p className="flex-1 text-center text-gray-600">Price : {price}</p>
 
             <button disabled={slots.length === 0}
                 className="px-4 py-2 text-purple-100 bg-cyan-600  rounded-md"
@@ -21,9 +22,6 @@ const AppointmentOption = ({ option, setTreatment,  setShowModal }) => {
             >
                 Book appointment
             </button>
-
-
-
         </div>
     );
 };

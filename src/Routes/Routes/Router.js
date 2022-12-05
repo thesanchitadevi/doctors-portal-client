@@ -11,6 +11,7 @@ import ErrorPage from "../../Pages/ErrorPage/ErrorPage";
 import Home from "../../Pages/Home/Home";
 import Login from "../../Pages/Login/Login";
 import Register from "../../Pages/Register/Register";
+import DisplayError from "../../Pages/Shared/DisplayError/DisplayError";
 import AdminRoute from "../AdminRoute/AdminRoute";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
         },
         {
             path: '/dashboard',
+            errorElement:<DisplayError></DisplayError>,
             element: <PrivateRoute><DashBoardLayout></DashBoardLayout></PrivateRoute>,
             children: [
                 {
@@ -62,7 +64,8 @@ const router = createBrowserRouter(
                 },
                 {
                     path: '/dashboard/payment/:id',
-                    element: <Payment></Payment>
+                    element: <Payment></Payment>,
+                    loader: ({params}) => fetch(`http://localhost:5000/bookings/${params.id}`)
                 },
             ]
         },

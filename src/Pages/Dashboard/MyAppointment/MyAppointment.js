@@ -108,6 +108,14 @@ const MyAppointment = () => {
                                                 </button>
                                             </Link>
                                         }
+                                        {
+                                            booking.price && booking.paid &&
+                                                    <strong
+                                                        class="rounded bg-green-100 px-3 py-1.5 text-xs font-medium text-green-700"
+                                                    >
+                                                        Paid
+                                                    </strong>
+                                        }
                                     </td>
                                 </tr>
                             )
